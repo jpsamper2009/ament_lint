@@ -43,7 +43,9 @@ function(ament_pclint)
 
   find_program(ament_pclint_BIN NAMES "ament_pclint")
   if(NOT ament_pclint_BIN)
-    message(FATAL_ERROR "ament_pclint() could not find program 'ament_pclint'")
+    message(WARNING "ament_pclint() could not find program 'ament_pclint', skipping.")
+    set(_ament_pclint_BIN_FOUND "FALSE" PARENT_SCOPE)
+    return()
   endif()
 
   set(cmd "${ament_pclint_BIN}" ${ARG_UNPARSED_ARGUMENTS})
@@ -109,4 +111,10 @@ function(ament_pclint)
     PROPERTIES
     LABELS "pclint;linter"
   )
+  if(NOT _ament_pclint_BIN_FOUND)
+    set_test_properties(
+      "${ARG_TESTNAME}"
+      PROPERTIES
+      DISABLED "TRUE"
+  endif()
 endfunction()
